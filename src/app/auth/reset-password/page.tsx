@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { resetPasswordSchema } from '@/lib/validations/auth';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [token, setToken] = useState('');
@@ -46,9 +46,10 @@ export default function ResetPasswordPage() {
         const data = await response.json();
         setError(data.message);
       }
-    } catch (err: any) {
-      if (err.errors) {
-        setError(err.errors[0].message);
+    } catch (err: unknown) {
+      const error = err as { errors?: { message: string }[] };
+      if (error.errors) {
+        setError(error.errors[0].message);
       } else {
         setError('Failed to reset password');
       }
@@ -117,5 +118,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

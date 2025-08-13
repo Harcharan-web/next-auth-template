@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
-import { users, passwordResetTokens, userSessions, auditLogs } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import type { UserRole } from '@/lib/db/types';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
@@ -63,7 +64,7 @@ export class UserService {
       position: userData.position,
       employeeId: userData.employeeId,
       password: hashedPassword,
-      role: userData.role as any,
+      role: userData.role as UserRole,
       passwordChangedAt: hashedPassword ? new Date() : null,
       status: 'active', // OAuth users are automatically active
       isEmailVerified: userData.password ? false : true, // OAuth emails are pre-verified

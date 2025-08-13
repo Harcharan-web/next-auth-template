@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       { message: 'If an account exists, a reset link will be sent' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

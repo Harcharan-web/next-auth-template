@@ -31,8 +31,9 @@ export default function ForgotPasswordPage() {
 
       const data = await response.json();
       setMessage(data.message);
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'Invalid email address');
+    } catch (err: unknown) {
+      const error = err as { errors?: { message: string }[] };
+      setError(error.errors?.[0]?.message || 'Invalid email address');
     } finally {
       setIsLoading(false);
     }

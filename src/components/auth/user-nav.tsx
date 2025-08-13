@@ -25,8 +25,8 @@ export function UserNav() {
     <div className="flex items-center gap-4">
       <div className="text-sm">
         <div className="text-white font-medium">Welcome, {session.user?.name || session.user?.email}</div>
-        {session.user?.role && (
-          <div className="text-xs text-yellow-400 capitalize font-medium">{session.user.role.replace('_', ' ')}</div>
+        {(session.user as { role?: string })?.role && (
+          <div className="text-xs text-yellow-400 capitalize font-medium">{(session.user as { role?: string }).role?.replace('_', ' ')}</div>
         )}
       </div>
       <Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: '/auth/login' })}>

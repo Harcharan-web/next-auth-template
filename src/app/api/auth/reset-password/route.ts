@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       { message: 'Password reset successfully' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

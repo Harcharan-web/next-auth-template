@@ -1,4 +1,21 @@
-import { getServerSession, type NextAuthOptions } from "next-auth";
+import { getServerSession } from "next-auth/next";
+
+// Define AuthOptions interface locally since it's not exported from NextAuth v4
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface AuthOptions {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  adapter?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  providers: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  session?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pages?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  events?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  callbacks?: any;
+}
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -8,7 +25,7 @@ import { users } from "./db/schema";
 import { eq } from "drizzle-orm";
 import { Adapter } from "next-auth/adapters";
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
     GoogleProvider({
@@ -58,7 +75,8 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
   },
   events: {
-    async createUser({ user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async createUser({ user }: { user: any }) {
       if (!user.email || !user.name) return;
 
       const [firstName, ...rest] = (user.name || "").split(" ");
@@ -75,21 +93,24 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    async jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
       }
       return token;
     },
-    async session({ session, token }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token }: { session: any; token: any }) {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       // Redirect to dashboard after successful login
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;

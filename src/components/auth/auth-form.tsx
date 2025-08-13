@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { loginSchema, registerSchema, type LoginInput, type RegisterInput } from '@/lib/validations/auth';
+import { loginSchema, registerSchema } from '@/lib/validations/auth';
 
 interface AuthFormProps {
   type: 'login' | 'register';
@@ -54,11 +54,12 @@ export function AuthForm({ type }: AuthFormProps) {
           setErrors({ general: error.message || 'Registration failed' });
         }
       }
-    } catch (error: any) {
-      if (error.errors) {
+    } catch (error: unknown) {
+      const err = error as { errors?: { path: string[]; message: string }[] };
+      if (err.errors) {
         const fieldErrors: Record<string, string> = {};
-        error.errors.forEach((err: any) => {
-          fieldErrors[err.path[0]] = err.message;
+        err.errors.forEach((validationErr) => {
+          fieldErrors[validationErr.path[0]] = validationErr.message;
         });
         setErrors(fieldErrors);
       }

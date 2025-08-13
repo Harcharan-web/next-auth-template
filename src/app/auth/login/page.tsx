@@ -17,7 +17,7 @@ export default function LoginPage() {
           </div>
           <h2 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent mb-2">Welcome Back</h2>
           <p className="text-gray-400">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/auth/register" className="font-semibold text-yellow-400 hover:text-yellow-300 transition-colors">
               Sign up
             </Link>

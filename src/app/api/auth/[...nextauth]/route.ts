@@ -1,6 +1,9 @@
 import NextAuth from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import type { NextRequest } from 'next/server';
 
-const handler = NextAuth(authOptions);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handler = (NextAuth as any)(authOptions);
 
-export { handler as GET, handler as POST };
+export const GET = handler as (req: NextRequest) => Promise<Response>;
+export const POST = handler as (req: NextRequest) => Promise<Response>;
